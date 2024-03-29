@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
+    <div class="explain">
+        <h1>Resource Calculator</h1>
+        <p>This is a simple resource calculator for Cursed Tank Simulator (<a href="https://www.roblox.com/games/6608498361/Cursed-Tank-Simulator">link</a>)</p>
+        <h2>How to use:</h2>
+        <p>1) Enter the amount of the resource in the "Amount" field and click the "Add" button for the desired resource.</p>
+        <p>2) When you have added all the necessary resources, click on the "Calculate cost" button to get the cost.</p>
+    </div>   
+
     <div class="horizontal_container">
         <div class="items_container">
             <button type="button" id="hide_primary_items">Primary items \/</button><br>
@@ -26,8 +34,9 @@
     </div>
     
     <div class="input_container">
-        <!--<input type="text" id="resource-name">-->Amount: <input type="number" id="resource-amount"> <br>
-        <button type="button" id="calculate">Calculate</button>
+        <!--<input type="text" id="resource-name">-->Amount: <input type="number" id="resource-amount" class="input_input">
+        
+        <button type="button" id="calculate" class="input_calculate_button">Calculate cost</button>
     </div>
 
     <div class="output_container">

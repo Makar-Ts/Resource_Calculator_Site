@@ -26,6 +26,7 @@ function getUrlVars() { // thx Stackoverflow
     var parts = $(location).attr('href').replace(/[?&amp;]+([^=&amp;]+)=([^&amp;]*)/gi, function(m, key, value) {
         vars[key] = value;
     });
+
     return vars;
 }
 
@@ -50,8 +51,6 @@ function updateCurrentResources() {
 
 $(document).ready(function() {
     const filePath = './resources.json';
-
-    console.log(getUrlVars());
 
     fetchJSONFile(filePath, (error, data) => {
         if (error) {
