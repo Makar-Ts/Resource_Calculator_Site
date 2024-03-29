@@ -20,7 +20,7 @@ function fetchJSONFile(path, callback) {
 }
 
 $(document).ready(function() {
-    const filePath = 'resources.json';
+    const filePath = './resources.json';
 
     fetchJSONFile(filePath, (error, data) => {
         if (error) {
