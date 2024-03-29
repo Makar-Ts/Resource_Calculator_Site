@@ -72,6 +72,8 @@ $(document).ready(function() {
                 }
             }
 
+            updateCurrentResources()
+
             $("#primary_items").html(primary_str+"</table>");
             $("#other_items").html(other_str+"</table>");
 
@@ -86,6 +88,8 @@ $(document).ready(function() {
                 } else {
                     resources.set(id, resource_amount);
                 }
+
+                if (resources.get(id) == 0) { resources.delete(id); }
                 
                 updateCurrentResources()
             
