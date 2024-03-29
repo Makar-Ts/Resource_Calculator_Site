@@ -22,7 +22,21 @@ function fetchJSONFile(path, callback) {
 }
 
 function updateCurrentResources() {
+    var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
+
+    for (let [key, value] of resources) {
+        var resource_name = "";
+        for (let k in json_data) {
+            if (k == key) {
+                resource_name = json_data[key]["names"][0];
+                break;
+            }
+        }
     
+        str += `<tr class='showed_item'><td>${resource_name}</td><td>${value}</td></tr>`;
+    }
+
+    $("#current_items").html(str + "</table>");
 }
 
 $(document).ready(function() {
@@ -42,9 +56,9 @@ $(document).ready(function() {
 
             for (let key in data) {
                 if (data[key]["primary"]) {
-                    primary_str += "<tr class='showed_item'><td>"+data[key]["names"][0]+"</td><td class='showed_item'><button type='button' class='resource_button' data="+key+">Add</button></td></tr>";
+                    primary_str += `<tr class='showed_item'><td>${data[key]['names'][0]}</td><td class='showed_item'><button type='button' class='resource_button' data=${key}>Add</button></td></tr>`;
                 } else {
-                    other_str += "<tr class='showed_item'><td>"+data[key]["names"][0]+"</td><td class='showed_item'><button type='button' class='resource_button' data="+key+">Add</button></td></tr>";
+                    other_str += `<tr class='showed_item'><td>${data[key]["names"][0]}</td><td class='showed_item'><button type='button' class='resource_button' data=${key}>Add</button></td></tr>`;
                 }
             }
 
@@ -53,29 +67,17 @@ $(document).ready(function() {
 
             $(".resource_button").click(function() {
                 var id = $(this).attr("data");
-                var resource_amount = $('#resource-amount').val();
+                var resource_amount = Number($('#resource-amount').val());
             
                 console.log(id + ' ' + resource_amount);
-
-                resources.set(id, resource_amount);
-                console.log(resources);
                 
-                var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
-
-                for (let [key, value] of resources) {
-                    var resource_name = "";
-                    for (let k in json_data) {
-                        if (k == key) {
-                            resource_name = json_data[key]["names"][0];
-                            break;
-                        }
-                    }
-                
-                    str += "<tr class='showed_item'><td>" + resource_name + "</td><td>" + value + "</td></tr>";
-                    console.log(resource_name);
+                if (resources.has(id)) {
+                    resources.set(id, resources.get(id) + resource_amount);
+                } else {
+                    resources.set(id, resource_amount);
                 }
-
-                $("#current_items").html(str + "</table>");
+                
+                updateCurrentResources()
             
                 $('#resource-amount').val("");
             });
@@ -83,7 +85,51 @@ $(document).ready(function() {
     });
 });
 
+function calculate_cost (id, count, cost) {
+    if (json_data[id].primary) {
+        if (cost.has(id)) {
+            cost.set(id, cost.get(id) + count);
+        } else {
+            cost.set(id, count);
+        }
+        return;
+    } else {
+        var components = json_data[id].craft;
+
+        console.log(components);
+
+        for (let key of Object.keys(components)) {
+            calculate_cost(key, count * components[key], cost);
+        }
+
+        return;
+    }
+}
+
 $('#calculate').click(function() {
+    var cost = new Map();
+
+    for (let [key, value] of resources) {
+        calculate_cost(key, value, cost);
+    }
+
+    var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
+
+    for (let [key, value] of cost) {
+        var resource_name = "";
+        for (let k in json_data) {
+            if (k == key) {
+                resource_name = json_data[key]["names"][0];
+                break;
+            }
+        }
+    
+        str += `<tr class='showed_item'><td>${resource_name}</td><td>${value}</td></tr>`;
+    }
+
+    $("#output").html(str + "</table>");
+
+    console.log(cost);
 });
 
 $("#hide_primary_items").click(function() {
