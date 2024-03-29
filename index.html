@@ -6,25 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Resource Calculator</title>
-    
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <div class="items_container">
-        <div id="primary_items"></div>
-        <button type="button" id="hide_primary_items">Hide primary items</button><br>
-    </div>
+    <div class="horizontal_container">
+        <div class="items_container">
+            <button type="button" id="hide_primary_items">Primary items \/</button><br>
+            <div id="primary_items"></div>
+        </div>
 
-    <div class="items_container">
-        <div id="other_items"></div>
-        <button type="button" id="hide_other_items">Hide other items</button><br>
+        <div class="items_container">
+            <button type="button" id="hide_other_items">Other items \/</button><br>
+            <div id="other_items"></div>
+        </div>
+        <div class="items_container">
+            Current resources: 
+            <div id="current_items"></div>
+        </div>
     </div>
-
+    
     <div class="input_container">
         <!--<input type="text" id="resource-name">-->Amount: <input type="number" id="resource-amount"> <br>
         <button type="button" id="calculate">Calculate</button>
     </div>
-
-    
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script type="text/javascript" src="resources.json"></script>

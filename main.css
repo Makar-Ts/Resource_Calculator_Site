@@ -1,3 +1,7 @@
-.horizontal {
-    
+.horizontal_container {
+    display:block;
+}
+
+.items_container {
+    display:inline-block;
 }
