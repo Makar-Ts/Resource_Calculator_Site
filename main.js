@@ -5,7 +5,7 @@ var is_other_items_show = true;
 
 var resources = new Map();
 
-function fetchJSONFile(path, callback) {
+function fetchJSONFile(path, callback) { // thx ChatGPT
     fetch(path)
         .then(response => {
             if (!response.ok) {
@@ -20,6 +20,15 @@ function fetchJSONFile(path, callback) {
             callback(error, null);
         });
 }
+
+function getUrlVars() { // thx Stackoverflow
+    var vars = {};
+    var parts = $(location).attr('href').replace(/[?&amp;]+([^=&amp;]+)=([^&amp;]*)/gi, function(m, key, value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
 
 function updateCurrentResources() {
     var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
@@ -41,6 +50,8 @@ function updateCurrentResources() {
 
 $(document).ready(function() {
     const filePath = './resources.json';
+
+    console.log(getUrlVars());
 
     fetchJSONFile(filePath, (error, data) => {
         if (error) {
