@@ -32,7 +32,7 @@ function getUrlVars() { // thx Stackoverflow
 
 
 function updateCurrentResources() {
-    var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
+    var str = "<table class='item_table'>"
 
     for (let [key, value] of resources) {
         var resource_name = "";
