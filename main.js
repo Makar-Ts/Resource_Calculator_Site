@@ -47,9 +47,7 @@ function updateShareUrl() {
         str += `${key}=${value}&`;
     }
 
-    console.log(str);
-
-    $("#url_container").attr("href", window.location.origin+"/?"+str);
+    $("#url_container").attr("href", window.location.origin+window.location.pathname+"/?"+str);
 }
 
 $(document).ready(function() {
@@ -61,7 +59,8 @@ $(document).ready(function() {
         resources.set(key, +urlParams.get(key));
     }
 
-    $("#url_container").attr("href", window.location.origin);
+    console.log(window.location);
+    $("#url_container").attr("href", window.location.origin+window.location.pathname);
 
     fetchJSONFile(filePath, (error, data) => {
         if (error) {
@@ -189,7 +188,7 @@ $("#hide_other_items").click(function() {
 });
 
 $("#copy_url").click(function() {
-    var text = $("#url_container").text();
+    var text = $("#url_container").attr("href");
     console.log(text);
 
     navigator.clipboard.writeText(text);
