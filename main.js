@@ -47,7 +47,7 @@ function updateShareUrl() {
         str += `${key}=${value}&`;
     }
 
-    $("#url_container").attr("href", window.location.origin+window.location.pathname+"/?"+str);
+    $("#url_container").attr("href", window.location.origin+window.location.pathname+"?"+str);
 }
 
 $(document).ready(function() {
