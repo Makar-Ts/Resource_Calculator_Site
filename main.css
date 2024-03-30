@@ -54,3 +54,33 @@ h2 {
 .output_container {
     margin-top: 30px;
 }
+
+@media (orientation: portrait) {
+    .horizontal_container, .items_container, .explain {
+        width: 100%;
+    }
+    .items_container {
+        display: block;
+        margin-bottom: 20px;
+    }
+    .showed_item {
+        height: 0.1em;
+        font-size: 2em;
+    }
+    .resource_button {
+        width: 100%;
+        height: 100%;
+        font-size: 0.5em;
+    }
+    .input_container {
+        width: 100%;
+    }
+    .input_input {
+        width: 50%;
+    }
+    .input_calculate_button {
+        width: 100%;
+        height: 4em;
+        margin-top: 15px;
+    }
+}
