@@ -21,15 +21,6 @@ function fetchJSONFile(path, callback) { // thx ChatGPT
         });
 }
 
-function getUrlVars() { // thx Stackoverflow
-    var vars = {};
-    var parts = $(location).attr('href').replace(/[?&amp;]+([^=&amp;]+)=([^&amp;]*)/gi, function(m, key, value) {
-        vars[key] = value;
-    });
-
-    return vars;
-}
-
 
 function updateCurrentResources() {
     var str = "<table class='item_table'>"
@@ -49,8 +40,28 @@ function updateCurrentResources() {
     $("#current_items").html(str + "</table>");
 }
 
+function updateShareUrl() {
+    var str = "";
+
+    for (let [key, value] of resources) {
+        str += `${key}=${value}&`;
+    }
+
+    console.log(str);
+
+    $("#url_container").attr("href", window.location.origin+"/?"+str);
+}
+
 $(document).ready(function() {
     const filePath = './resources.json';
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    for (let key of urlParams.keys()) {
+        resources.set(key, +urlParams.get(key));
+    }
+
+    $("#url_container").attr("href", window.location.origin);
 
     fetchJSONFile(filePath, (error, data) => {
         if (error) {
@@ -72,14 +83,18 @@ $(document).ready(function() {
                 }
             }
 
-            updateCurrentResources()
+            updateCurrentResources();
+            updateShareUrl();
+            if (urlParams.size > 0) {
+                calculateCost();
+            }
 
             $("#primary_items").html(primary_str+"</table>");
             $("#other_items").html(other_str+"</table>");
 
             $(".resource_button").click(function() {
                 var id = $(this).attr("data");
-                var resource_amount = Number($('#resource-amount').val());
+                var resource_amount = +$('#resource-amount').val();
             
                 console.log(id + ' ' + resource_amount);
                 
@@ -92,6 +107,7 @@ $(document).ready(function() {
                 if (resources.get(id) == 0) { resources.delete(id); }
                 
                 updateCurrentResources()
+                updateShareUrl()
             
                 $('#resource-amount').val("");
             });
@@ -99,7 +115,7 @@ $(document).ready(function() {
     });
 });
 
-function calculate_cost (id, count, cost) {
+function calculate_cost_recursion (id, count, cost) {
     if (json_data[id].primary) {
         if (cost.has(id)) {
             cost.set(id, cost.get(id) + count);
@@ -113,18 +129,18 @@ function calculate_cost (id, count, cost) {
         console.log(components);
 
         for (let key of Object.keys(components)) {
-            calculate_cost(key, count * components[key], cost);
+            calculate_cost_recursion(key, count * components[key], cost);
         }
 
         return;
     }
 }
 
-$('#calculate').click(function() {
+function calculateCost() {
     var cost = new Map();
 
     for (let [key, value] of resources) {
-        calculate_cost(key, value, cost);
+        calculate_cost_recursion(key, value, cost);
     }
 
     var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
@@ -144,7 +160,9 @@ $('#calculate').click(function() {
     $("#output").html(str + "</table>");
 
     console.log(cost);
-});
+}
+
+$('#calculate').click(calculateCost);
 
 $("#hide_primary_items").click(function() {
     if (is_primary_items_show) {
@@ -169,3 +187,10 @@ $("#hide_other_items").click(function() {
 
     is_other_items_show = !is_other_items_show;
 });
+
+$("#copy_url").click(function() {
+    var text = $("#url_container").text();
+    console.log(text);
+
+    navigator.clipboard.writeText(text);
+})
