@@ -23,7 +23,7 @@ function fetchJSONFile(path, callback) { // thx ChatGPT
 
 
 function updateCurrentResources() {
-    var str = "<table class='item_table'>"
+    var str = "<table class='item_table'><tr class='showed_item_header'><th>Item</th><th>Amount</th></tr>"
 
     for (let [key, value] of resources) {
         var resource_name = "";
@@ -34,7 +34,7 @@ function updateCurrentResources() {
             }
         }
     
-        str += `<tr class='showed_item'><td>${resource_name}</td><td>${value}</td></tr>`;
+        str += `<tr class='showed_item'><td class="output_resource_type">${resource_name}</td><td class="output_resource_amount">${value}</td></tr>`;
     }
 
     $("#current_items").html(str + "</table>");
@@ -71,14 +71,14 @@ $(document).ready(function() {
             
             json_data = data;
 
-            var primary_str = "<table class='item_table'>";
-            var other_str = "<table class='item_table'>";   
+            var primary_str = "<optgroup label='Primary'>";
+            var other_str = "<optgroup label='Other'>";   
 
             for (let key in data) {
                 if (data[key]["primary"]) {
-                    primary_str += `<tr class='showed_item'><td>${data[key]['names'][0]}</td><td class='showed_item'><button type='button' class='resource_button' data=${key}>Add</button></td></tr>`;
+                    primary_str += `<option value=${key}>${data[key]['names'][0]}</option>`;
                 } else {
-                    other_str += `<tr class='showed_item'><td>${data[key]["names"][0]}</td><td class='showed_item'><button type='button' class='resource_button' data=${key}>Add</button></td></tr>`;
+                    other_str += `<option value=${key}>${data[key]['names'][0]}</option>`;
                 }
             }
 
@@ -88,12 +88,11 @@ $(document).ready(function() {
                 calculateCost();
             }
 
-            $("#primary_items").html(primary_str+"</table>");
-            $("#other_items").html(other_str+"</table>");
+            $("#resource_selection").html(other_str+"</optgroup>"+primary_str+"</optgroup>");
 
-            $(".resource_button").click(function() {
-                var id = $(this).attr("data");
-                var resource_amount = +$('#resource-amount').val();
+            $("#add_resource").click(function() {
+                var id = $("#resource_selection").val();
+                var resource_amount = +$('#resource_amount').val();
             
                 console.log(id + ' ' + resource_amount);
                 
@@ -104,11 +103,11 @@ $(document).ready(function() {
                 }
 
                 if (resources.get(id) == 0) { resources.delete(id); }
+
+                $('#resource_amount').val(0);
                 
                 updateCurrentResources()
                 updateShareUrl()
-            
-                $('#resource-amount').val("");
             });
         }
     });
@@ -153,7 +152,7 @@ function calculateCost() {
             }
         }
     
-        str += `<tr class='showed_item'><td>${resource_name}</td><td>${value}</td></tr>`;
+        str += `<tr class='showed_item'><td class="output_resource_type">${resource_name}</td><td class="output_resource_amount">${value}</td></tr>`;
     }
 
     $("#output").html(str + "</table>");
